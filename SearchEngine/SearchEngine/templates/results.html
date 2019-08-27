@@ -1,0 +1,63 @@
+<html>
+	<head>
+		<title>TuneSearch Results for {{query}}</title>
+		<link rel="stylesheet" type="text/css" href="/static/searchengine.css" media="screen" />
+	</head>
+	<body>
+		<div id="results_top">
+			<div id="logo">
+				<a href="http://localhost:1480"></a><img src="/static/header.png" width=100px height=30px>
+			</div>
+			<div id="searchbar">
+				 <form action="{{ url_for('dosearch') }}" method="GET">
+					<div>
+						<input type="radio" name="query_type" value="or" checked>
+						<label for="or">OR</label>
+						<input type="radio" name="query_type" value="and">
+						<label for="and">AND</label>
+						<input type="text" maxlength=50 size=50 name="query" value="{{query}}"><input type="submit" name="action" value="Search">
+						<input name="page" value="1" hidden>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		{% if results > 0 %}
+		<p><strong>{{ results }} results for </strong>{{query}}</p>
+
+		{% for result in search_results %}
+		<p><strong><a href="http://www.lyricsfreak.com{{ result[2] }}" target="_blank">{{ result[0] }}</a></strong> <em>by</em> {{ result[1] }} </p>
+		{% endfor %}
+
+		{% else %}
+		<p><strong>No results for </strong>{{query}}</p>
+		{% endif %}
+		
+		{% if page > 1 %}
+		<div id="prev">
+			<form id="prev" action="{{ url_for('dosearch') }}" method="GET">
+				<div>
+					<input name="query_type" value="{{query_type}}" hidden>
+					<input name="query" value="{{query}}" hidden>
+					<input type="submit" name="action" value="Previous">
+					<input name="page" value={{page - 1 }} hidden>
+				</div>
+			</form>
+		</div>
+		{% endif %}
+
+		{% if page < lastpage %}
+		<div id="next">
+			<form id="next" action="{{ url_for('dosearch') }}" method="GET">
+				<div>
+					<input name="query_type" value="{{query_type}}" hidden>
+					<input name="query" value="{{query}}" hidden>
+					<input type="submit" name="action" value="Next">
+					<input name="page" value={{page + 1 }} hidden>
+				</div>
+			</form>
+		</div>
+		{% endif %}
+		
+	</body>
+</html>
